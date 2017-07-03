@@ -1,0 +1,106 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.user {
+  &[data-hasdata="false"] {
+    display: none;
+  }
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  margin: 0 0 25px;
+  background: #202020;
+  color: #fff;
+  height: 90px;
+  
+  &__image {
+    overflow: hidden;
+    border-radius: 50%;
+    text-align: center;
+    width: 60px;
+    height: 60px;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  
+  &__single {
+    flex: 0 0 100%;
+    margin-bottom: 1%;
+    background: #fff;
+    border: 1px solid #111;
+    border-radius: 2px;
+    box-sizing: border-box;
+    
+    img {
+      display: block;
+      margin: 0 auto 10px;
+      cursor: pointer;
+    }
+    img, p {
+      max-width: 100%;
+    }
+    
+    p {
+      padding: 0 5px;
+    }
+
+    @media screen and (min-width: 450px) {
+      flex: 0 0 48%;
+    }
+    
+    @media screen and (min-width: 768px) {
+      flex: 0 0 32%;
+    }
+    
+    @media screen and (min-width: 1024px) {
+      flex: 0 0 24%;
+    }
+    @media screen and (min-width: 1400px) {
+      flex: 0 0 19%;
+    }
+  }
+}
+
+
+.modal {
+  &[data-show="false"] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(#000, .8);
+  top: 0;
+  left: 0;
+  opacity: 1;
+  transition: opacity .2s ease-out;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__image {
+    width: 98%;
+    height: 98%;
+    max-width: 900px;
+    max-height: 900px;
+    width: auto;
+    height: auto;
+  }
+}
