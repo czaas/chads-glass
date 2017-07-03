@@ -86,13 +86,19 @@ h1 {
 
     svg {
       display: none;
-      pointer-events: none;
+
       &[data-video="true"] {
         display: block;
-        position: absolute;
-        top: 10px;
-        right: 10px;
       }
+      
+      pointer-events: none;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      background: #fff;
+      padding: 3px;
+
       path {
         fill: #222;
       }
