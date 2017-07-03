@@ -128,16 +128,41 @@ h1 {
     height: 100%;
   }
 
-  &__image {
+  &__content {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
     text-align: center;
 
-    img {
-      max-width: 90vw;
-      height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    
+    &__image {
+      flex: 1 1 100%;
+
+      img {
+        display: block;
+        max-width: 90vw;
+        max-height: calc(100vh - 45px); // height of container minus controls
+        height: auto;
+      }
+    }
+
+    &__angle {
+      flex: 1 0 50%;
+      cursor: pointer;
+
+      svg path {
+        fill: rgba(#fff, .8);
+      }
+
+      &:hover {
+        background: rgba(#fff,.1);
+        svg path {
+          fill: rgba(#fff, 1);
+        }
+      }
     }
 
     @include noselect;
