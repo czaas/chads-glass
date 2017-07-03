@@ -15,23 +15,34 @@ const SingleImage = ({ toggleModal, image }) => (
 );
 
 const Modal = ({ showModal, toggleModal, updateImage, currentImage, nextImage, prevImage }) => {
-  
+  if (currentImage) {
 
-  return (
-    <div class="modal" data-show={ (showModal) ? 'true' : 'false' }>
-      <div class="modal__bg" onclick={toggleModal} />
-      <div class="modal__content">
-        
-        <div class="modal__content__image">
-          <img src={currentImage.url} width={currentImage.width} height={currentImage.height} />
+    let currentImageHtml = <img src={currentImage.images.standard_resolution.url} width={currentImage.images.standard_resolution.width} height={currentImage.images.standard_resolution.height} />;
+
+    let media;
+
+    if (currentImage.alt_media_url) {
+      media = <video src={currentImage.alt_media_url} controls="true" autoplay="true" loop="true" muted="true" />;
+    } else {
+      media = currentImageHtml;
+    }
+
+    return (
+      <div class="modal" data-show={ (showModal) ? 'true' : 'false' }>
+        <div class="modal__bg" onclick={toggleModal} />
+        <div class="modal__content">
+          
+          <div class="modal__content__image">
+            {media}
+          </div>
+          
+          <div onclick={() => updateImage(prevImage)} data-image={(prevImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
+
+          <div onclick={() => updateImage(nextImage)} data-image={(nextImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
         </div>
-        
-        <div onclick={() => updateImage(prevImage)} data-image={(prevImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
-
-        <div onclick={() => updateImage(nextImage)} data-image={(nextImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 app({
@@ -39,12 +50,7 @@ app({
     items: [],
     profile: {},
     showModal: false,
-    currentImage: {
-      url: undefined,
-      width: undefined,
-      height: undefined,
-      id: undefined,
-    },
+    currentImage: undefined,
     nextImage: undefined,
     prevImage: undefined,
   },
@@ -86,24 +92,14 @@ app({
     },
     updateImage: (state, actions, newImage) => {
       if (newImage && newImage.id) {
-        let currentImage = Object.assign({}, newImage.images.standard_resolution, {
-          id: newImage.id,
-        });
-
-        let nextImage, prevImage;
-
         for (let i = 0; i < state.items.length; i++) {
-          let image = state.items[i];
-
-          if (image.id === currentImage.id) {
-            nextImage = state.items[i + 1];
-            prevImage = state.items[i - 1];
+          if (state.items[i].id === newImage.id) {
+            state.nextImage = state.items[i + 1];
+            state.prevImage = state.items[i - 1];
           }
         }
 
-        state.currentImage = currentImage;
-        state.nextImage = nextImage;
-        state.prevImage = prevImage;
+        state.currentImage = newImage;
 
         return state;
       }

@@ -142,7 +142,7 @@ h1 {
     &__image {
       flex: 1 1 100%;
 
-      img {
+      img, video {
         display: block;
         max-width: 90vw;
         max-height: calc(100vh - 45px); // height of container minus controls
