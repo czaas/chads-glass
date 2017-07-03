@@ -152,13 +152,19 @@ h1 {
     &__angle {
       flex: 1 0 50%;
       cursor: pointer;
+      background: rgba(#fff,.1);
+
+      &[data-image="false"] {
+        opacity: .4;
+        cursor: not-allowed;
+      }
 
       svg path {
         fill: rgba(#fff, .8);
       }
 
       &:hover {
-        background: rgba(#fff,.1);
+        background: rgba(#fff,.3);
         svg path {
           fill: rgba(#fff, 1);
         }

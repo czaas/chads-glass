@@ -9,10 +9,30 @@ import { h, app } from 'hyperapp';
 
 const SingleImage = ({ toggleModal, image }) => (
   <div class="images__single">
-    <img src={ image.images.low_resolution.url } onclick={ () => toggleModal(image.images.standard_resolution) } />
+    <img src={ image.images.low_resolution.url } onclick={ () => toggleModal(image) } />
     <p><strong>{ image.likes.count } likes</strong><br />{ image.caption.text.replace('#', '#\n') }</p>
   </div>
 );
+
+const Modal = ({ showModal, toggleModal, updateImage, currentImage, nextImage, prevImage }) => {
+  
+
+  return (
+    <div class="modal" data-show={ (showModal) ? 'true' : 'false' }>
+      <div class="modal__bg" onclick={toggleModal} />
+      <div class="modal__content">
+        
+        <div class="modal__content__image">
+          <img src={currentImage.url} width={currentImage.width} height={currentImage.height} />
+        </div>
+        
+        <div onclick={() => updateImage(prevImage)} data-image={(prevImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
+
+        <div onclick={() => updateImage(nextImage)} data-image={(nextImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
+      </div>
+    </div>
+  );
+};
 
 app({
   state: {
@@ -23,7 +43,10 @@ app({
       url: undefined,
       width: undefined,
       height: undefined,
-    }
+      id: undefined,
+    },
+    nextImage: undefined,
+    prevImage: undefined,
   },
   view: (state, actions) => (
   <main>
@@ -44,16 +67,14 @@ app({
         { state.items.map((image) => <SingleImage toggleModal={actions.toggleModal} image={image} />) }
       </div>
 
-      <div class="modal" data-show={ (state.showModal) ? 'true' : 'false' }>
-        <div class="modal__bg" onclick={actions.toggleModal} />
-        <div class="modal__content">
-          <div class="modal__content__image">
-            <img src={state.currentImage.url} width={state.currentImage.width} height={state.currentImage.height} />
-          </div>
-          <div class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
-          <div class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
-        </div>
-      </div>
+      <Modal 
+        showModal={state.showModal} 
+        currentImage={state.currentImage} 
+        nextImage={state.nextImage}
+        prevImage={state.prevImage}
+        toggleModal={actions.toggleModal} 
+        updateImage={actions.updateImage}
+      />
   </main>
   ),
   actions: {
@@ -63,10 +84,34 @@ app({
 
       return state;
     },
+    updateImage: (state, actions, newImage) => {
+      if (newImage && newImage.id) {
+        let currentImage = Object.assign({}, newImage.images.standard_resolution, {
+          id: newImage.id,
+        });
+
+        let nextImage, prevImage;
+
+        for (let i = 0; i < state.items.length; i++) {
+          let image = state.items[i];
+
+          if (image.id === currentImage.id) {
+            nextImage = state.items[i + 1];
+            prevImage = state.items[i - 1];
+          }
+        }
+
+        state.currentImage = currentImage;
+        state.nextImage = nextImage;
+        state.prevImage = prevImage;
+
+        return state;
+      }
+    },
     toggleModal: (state, actions, image) => { 
-      
+      actions.updateImage(image);
+
       state.showModal = !state.showModal; 
-      state.currentImage = image;
 
       return state; 
     },
