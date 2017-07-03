@@ -10,7 +10,7 @@ import { h, app } from 'hyperapp';
 const SingleImage = ({ toggleModal, image }) => (
   <div class="images__single">
     <img src={ image.images.low_resolution.url } onclick={ () => toggleModal(image.images.standard_resolution) } />
-    <p><strong>{ image.likes.count } likes</strong><br />{ image.caption.text }</p>
+    <p><strong>{ image.likes.count } likes</strong><br />{ image.caption.text.replace('#', '#\n') }</p>
   </div>
 );
 
@@ -34,12 +34,21 @@ app({
         </div>
       </div>
 
+      <div class="content-section">
+        <p>Yo! I'm a lamp worker with a private studio. I make pendants, trinkets, and many more unique pieces with glass.</p> 
+
+        <p><a href="mailto:temp@email.com">Hit me up</a> if you're interested in something you see or you want to commision a piece.</p>
+      </div>
+
       <div class="images">
         { state.items.map((image) => <SingleImage toggleModal={actions.toggleModal} image={image} />) }
       </div>
 
-      <div class="modal" data-show={ (state.showModal) ? 'true' : 'false' } onclick={actions.toggleModal}>
-        <img class="modal__image" src={state.currentImage.url} width={state.currentImage.width} height={state.currentImage.height} />
+      <div class="modal" data-show={ (state.showModal) ? 'true' : 'false' }>
+        <div class="modal__bg" onclick={actions.toggleModal} />
+        <div class="modal__image">
+          <img src={state.currentImage.url} width={state.currentImage.width} height={state.currentImage.height} />
+        </div>
       </div>
   </main>
   ),
