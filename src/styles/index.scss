@@ -137,6 +137,7 @@ h1 {
 
     display: flex;
     flex-wrap: wrap;
+    max-width: 640px;
     
     &__image {
       flex: 1 1 100%;
@@ -146,6 +147,7 @@ h1 {
         max-width: 90vw;
         max-height: calc(100vh - 45px); // height of container minus controls
         height: auto;
+        width: auto;
       }
     }
 
