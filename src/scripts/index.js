@@ -10,28 +10,40 @@ import { h, app } from 'hyperapp';
 const SingleImage = ({ toggleModal, image }) => (
   <div class="images__single">
     <img src={ image.images.low_resolution.url } onclick={ () => toggleModal(image) } />
+    <svg data-video={image.alt_media_url ? 'true' : 'false'} width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 352v1088q0 42-39 59-13 5-25 5-27 0-45-19l-403-403v166q0 119-84.5 203.5t-203.5 84.5h-704q-119 0-203.5-84.5t-84.5-203.5v-704q0-119 84.5-203.5t203.5-84.5h704q119 0 203.5 84.5t84.5 203.5v165l403-402q18-19 45-19 12 0 25 5 39 17 39 59z"/></svg>
     <p><strong>{ image.likes.count } likes</strong><br />{ image.caption.text.replace('#', '#\n') }</p>
   </div>
 );
 
 const Modal = ({ showModal, toggleModal, updateImage, currentImage, nextImage, prevImage }) => {
-  
+  if (currentImage) {
 
-  return (
-    <div class="modal" data-show={ (showModal) ? 'true' : 'false' }>
-      <div class="modal__bg" onclick={toggleModal} />
-      <div class="modal__content">
-        
-        <div class="modal__content__image">
-          <img src={currentImage.url} width={currentImage.width} height={currentImage.height} />
+    let currentImageHtml = <img src={currentImage.images.standard_resolution.url} width={currentImage.images.standard_resolution.width} height={currentImage.images.standard_resolution.height} />;
+
+    let media;
+
+    if (currentImage.alt_media_url) {
+      media = <video src={currentImage.alt_media_url} controls="true" autoplay="true" loop="true" muted="true" />;
+    } else {
+      media = currentImageHtml;
+    }
+
+    return (
+      <div class="modal" data-show={ (showModal) ? 'true' : 'false' }>
+        <div class="modal__bg" onclick={toggleModal} />
+        <div class="modal__content">
+          
+          <div class="modal__content__image">
+            {media}
+          </div>
+          
+          <div onclick={() => updateImage(prevImage)} data-image={(prevImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
+
+          <div onclick={() => updateImage(nextImage)} data-image={(nextImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
         </div>
-        
-        <div onclick={() => updateImage(prevImage)} data-image={(prevImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--left"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1203 544q0 13-10 23l-393 393 393 393q10 10 10 23t-10 23l-50 50q-10 10-23 10t-23-10l-466-466q-10-10-10-23t10-23l466-466q10-10 23-10t23 10l50 50q10 10 10 23z"/></svg></div>
-
-        <div onclick={() => updateImage(nextImage)} data-image={(nextImage) ? 'true' : 'false'} class="modal__content__angle modal__content__angle--right"><svg width="45" height="45" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"/></svg></div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 app({
@@ -39,12 +51,7 @@ app({
     items: [],
     profile: {},
     showModal: false,
-    currentImage: {
-      url: undefined,
-      width: undefined,
-      height: undefined,
-      id: undefined,
-    },
+    currentImage: undefined,
     nextImage: undefined,
     prevImage: undefined,
   },
@@ -86,24 +93,14 @@ app({
     },
     updateImage: (state, actions, newImage) => {
       if (newImage && newImage.id) {
-        let currentImage = Object.assign({}, newImage.images.standard_resolution, {
-          id: newImage.id,
-        });
-
-        let nextImage, prevImage;
-
         for (let i = 0; i < state.items.length; i++) {
-          let image = state.items[i];
-
-          if (image.id === currentImage.id) {
-            nextImage = state.items[i + 1];
-            prevImage = state.items[i - 1];
+          if (state.items[i].id === newImage.id) {
+            state.nextImage = state.items[i + 1];
+            state.prevImage = state.items[i - 1];
           }
         }
 
-        state.currentImage = currentImage;
-        state.nextImage = nextImage;
-        state.prevImage = prevImage;
+        state.currentImage = newImage;
 
         return state;
       }
