@@ -83,7 +83,7 @@ h1 {
 .images {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
   
   &__single {
     flex: 0 0 100%;
@@ -138,17 +138,43 @@ h1 {
 
     @media screen and (min-width: 450px) {
       flex: 0 0 48%;
+      margin-right: 2%;
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
     }
     
     @media screen and (min-width: 768px) {
       flex: 0 0 32%;
+      margin-right: 1%;
+
+      &:nth-child(2n) { 
+        margin-right: 1%; 
+      }
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
     }
     
     @media screen and (min-width: 1024px) {
       flex: 0 0 24%;
+
+      &:nth-child(3n) { 
+        margin-right: 1%;
+      }
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
     }
     @media screen and (min-width: 1400px) {
       flex: 0 0 19%;
+
+      &:nth-child(4n) { 
+        margin-right: 1%;
+      }
+      &:nth-child(5n) {
+        margin-right: 0;
+      }
     }
   }
 }
