@@ -1,3 +1,12 @@
+$teal: #00ffea;
+$green: #00ff00;
+$magenta: #ff00ff;
+
+$app--bg: $teal;
+$app--color: #fff;
+
+$app--black: #202020;
+
 @mixin noselect {
   -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -12,7 +21,20 @@ body {
   margin: 0;
   padding: 0;
   font-family:  sans-serif;
-  font-weight: 100;
+}
+
+.app {
+  padding-bottom: 1px;
+  background: $green;
+
+  &[data-background="teal"] {
+    background: $teal;
+  }
+
+  &[data-background="magenta"] {
+    background: $magenta;
+    color: #fff;
+  }
 }
 
 h1 {
@@ -30,8 +52,8 @@ h1 {
   justify-content: space-between;
   align-items: center;
   margin: 0 0 25px;
-  background: #202020;
-  color: #fff;
+  background: $app--black;
+  color: $app--color;
   height: 90px;
   
   &__image {
@@ -56,6 +78,10 @@ h1 {
 .content-section {
   &--leave {
     text-align: center;
+
+    svg path {
+      fill: rgb(0, 0, 238);
+    }
   }
 }
 
@@ -67,7 +93,8 @@ h1 {
   &__single {
     flex: 0 0 100%;
     margin-bottom: 1%;
-    background: #fff;
+    background: #202020;
+    color: #fff;
     border: 1px solid #111;
     border-radius: 2px;
     box-sizing: border-box;
