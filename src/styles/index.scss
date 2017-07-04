@@ -53,6 +53,12 @@ h1 {
   padding: 0 20px;
 }
 
+.content-section {
+  &--leave {
+    text-align: center;
+  }
+}
+
 .images {
   display: flex;
   flex-wrap: wrap;
