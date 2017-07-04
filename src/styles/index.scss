@@ -72,6 +72,12 @@ h1 {
       fill: rgb(0, 0, 238);
     }
   }
+  &--more { 
+    &[data-more-available="false"] {
+      display: none;
+    }
+    text-align: center;
+  }
 }
 
 .images {
