@@ -1,8 +1,6 @@
-$teal: #00ffea;
 $green: #00ff00;
-$magenta: #ff00ff;
 
-$app--bg: $teal;
+$app--bg: $green;
 $app--color: #fff;
 
 $app--black: #202020;
@@ -25,16 +23,7 @@ body {
 
 .app {
   padding-bottom: 1px;
-  background: $green;
-
-  &[data-background="teal"] {
-    background: $teal;
-  }
-
-  &[data-background="magenta"] {
-    background: $magenta;
-    color: #fff;
-  }
+  background: $app--bg;
 }
 
 h1 {

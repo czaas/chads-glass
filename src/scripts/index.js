@@ -4,9 +4,16 @@ if (module.hot) {
   module.hot.accept();
 }
 
+let apiURL = '';
+if (process.env.NODE_ENV === 'development') {
+  apiURL = 'http://localhost:8000';
+} else {
+  apiURL = 'http://chads-glass.czaas.com';
+}
+
+import 'whatwg-fetch';
 import '../styles/index.scss';
 import { h, app } from 'hyperapp';
-import { getUrlParameter } from './_util.js';
 
 const SingleImage = ({ toggleModal, image }) => (
   <div class="images__single">
@@ -55,9 +62,10 @@ app({
     currentImage: undefined,
     nextImage: undefined,
     prevImage: undefined,
+    isLoading: false,
   },
   view: (state, actions) => (
-  <main class="app" data-background={getUrlParameter('background') ? getUrlParameter('background') : ''}>
+  <main class="app" data-loading={state.isLoading ? 'true' : 'false'}>
       <div class="top">
         <h1>Chad's Glass</h1>
         <div class="top__image">
@@ -70,7 +78,7 @@ app({
 
         <p><a href="mailto:chadahouser@gmail.com">Hit me up</a> if you're interested in something you see or you want to commision a piece.</p>
       </div>
-
+    
       <div class="images">
         { state.items.map((image) => <SingleImage toggleModal={actions.toggleModal} image={image} />) }
       </div>
@@ -92,10 +100,14 @@ app({
   </main>
   ),
   actions: {
-    addItems: (state, actions, items) => state.items = items,
+    addItems: (state, actions, items) => {
+      state.items = items;
+      state.isLoading = false;
+
+      return state;
+    },
     updateProfile: (state, actions, profile) => {
       state.profile = profile;
-
       return state;
     },
     updateImage: (state, actions, newImage) => {
@@ -119,19 +131,45 @@ app({
 
       return state; 
     },
+    getImages: (state, actions, id) => {
+      let lastId = '';
+
+      if (id) {
+        lastId = `?last_id=${ id }`;
+      }
+      fetch(`${ apiURL }/api.php${ lastId }`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: new Headers(),
+        'Access-Control-Allow-Origin': '*',
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          if (!state.profile.username) {
+            let profile = {
+              name: json.items[0].user.full_name,
+              image: json.items[0].user.profile_picture,
+              username: json.items[0].user.username,
+            };
+            actions.updateProfile(profile);
+          }
+
+          let mergedItems = state.items;
+
+          for (let i = 0; i < json.items.length; i++) {
+            mergedItems.push(json.items[i]);
+          }
+
+          actions.addItems(mergedItems);
+        });
+    },
   },
   events: {
     loaded: (state, actions) => {
-      let instaData = window.instaData;
+      state.isLoading = true;
+      actions.getImages();
 
-      let profile = {
-        name: instaData.items[0].user.full_name,
-        image: instaData.items[0].user.profile_picture,
-        username: instaData.items[0].user.username,
-      };
-
-      actions.addItems({ items: instaData.items });
-      actions.updateProfile(profile);
+      return state;
     }
   }
 });
