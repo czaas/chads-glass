@@ -6,6 +6,7 @@ if (module.hot) {
 
 import '../styles/index.scss';
 import { h, app } from 'hyperapp';
+import { getUrlParameter } from './_util.js';
 
 const SingleImage = ({ toggleModal, image }) => (
   <div class="images__single">
@@ -56,9 +57,9 @@ app({
     prevImage: undefined,
   },
   view: (state, actions) => (
-  <main>
+  <main class="app" data-background={getUrlParameter('background') ? getUrlParameter('background') : ''}>
       <div class="top">
-        <h1>Chads Glass</h1>
+        <h1>Chad's Glass</h1>
         <div class="top__image">
           <a href={`https://www.instagram.com/${ state.profile.username }`} target="_blank"><img src={ state.profile.image } alt={state.profile.name} /></a>
         </div>
@@ -67,7 +68,7 @@ app({
       <div class="content-section">
         <p>Yo! I'm a lamp worker with a private studio. I make pendants, trinkets, and many more unique pieces with glass.</p> 
 
-        <p><a href="mailto:temp@email.com">Hit me up</a> if you're interested in something you see or you want to commision a piece.</p>
+        <p><a href="mailto:chadahouser@gmail.com">Hit me up</a> if you're interested in something you see or you want to commision a piece.</p>
       </div>
 
       <div class="images">
