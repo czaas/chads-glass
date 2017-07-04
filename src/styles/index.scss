@@ -25,12 +25,10 @@ body {
 
 .app {
   padding-bottom: 1px;
+  background: $green;
 
   &[data-background="teal"] {
     background: $teal;
-  }
-  &[data-background="green"] {
-    background: $green;
   }
 
   &[data-background="magenta"] {
