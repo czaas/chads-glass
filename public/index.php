@@ -6,8 +6,6 @@
   <title>Chads Glass</title>
   <meta name="description" content="Unique custom glass blowing by Chad Houser">
   <script>
-    window.instaData = <?= file_get_contents('https://www.instagram.com/chadahouser/media/'); ?>
-
     <?= file_get_contents('bundle.js'); ?>
   </script>
   <style>
