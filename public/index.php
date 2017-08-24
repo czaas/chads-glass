@@ -5,12 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chads Glass</title>
   <meta name="description" content="Unique custom glass blowing by Chad Houser">
-  <script>
-    <?= file_get_contents('bundle.js'); ?>
-  </script>
-  <style>
-    <?= file_get_contents('styles/bundle.css'); ?>
-  </style>
+  <link rel="stylesheet" href="styles/bundle.css">
+  <script src="bundle.js"></script>
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
